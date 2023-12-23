@@ -9,12 +9,14 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 @Entity()
+@Unique(['name'])
 export class Role {
   @PrimaryGeneratedColumn()
-  _id;
+  _id: number;
 
   @Column()
   name: string;
@@ -22,7 +24,7 @@ export class Role {
   @Column()
   description: string;
 
-  @Column()
+  @Column({default: true})
   isActive: boolean;
 
   @CreateDateColumn({ nullable: true })
@@ -52,10 +54,10 @@ export class Role {
     email: string;
   };
   @ManyToOne(() => User, (user) => user.roles)
-    user: User
+  user: User;
 
-    @ManyToMany(() => Permission)
-    @JoinTable()
-    permissions: Permission[]
+  @ManyToMany(() => Permission)
+  @JoinTable()
+  permissions: Permission[];
   // permissions: 	foreign key (n: n)
 }

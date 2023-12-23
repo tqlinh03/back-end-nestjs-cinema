@@ -38,7 +38,7 @@ export class User {
   @UpdateDateColumn({ nullable: true })
   updatedAt: Date;
 
-  @DeleteDateColumn({ nullable: true })
+  @DeleteDateColumn({nullable: true })
   deletedAt: Date;
 
   @Column({ type: 'json', nullable: true })

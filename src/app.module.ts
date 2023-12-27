@@ -9,6 +9,9 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { Permission } from './permissions/entities/permission.entity';
 import { Role } from './roles/entities/role.entity';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -25,7 +28,7 @@ import { Role } from './roles/entities/role.entity';
         password: configService.get<string>('DATABASE_PASS'),
         database: configService.get<string>('DATABASE_NAME'),
         // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        entities: [User,Permission,Role],
+        entities: [User, Permission, Role],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -43,8 +46,15 @@ import { Role } from './roles/entities/role.entity';
     UsersModule,
     RolesModule,
     PermissionsModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

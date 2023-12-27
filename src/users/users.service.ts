@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
@@ -93,6 +93,52 @@ export class UsersService {
   async restore(_id: number) {
     const user = await this.usersRepository.restore({ _id });
     await this.usersRepository.update(_id, { isActive: true });
+    return user;
+  }
+
+  async findOneByEmail(email: string) {
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: {
+        _id: true,
+        name: true,
+        email: true,
+        address: true,
+        gender: true,
+        password: true,
+      },
+      // relations: ['role'],
+    });
+    if (!user) {
+      throw new BadRequestException('email, password không đúng!');
+    }
+
+    return user;
+  }
+
+  isValidPassword(password: string, hash: string) {
+    const comparePassword = bcrypt.compareSync(password, hash);
+    if (comparePassword == false) {
+      throw new BadRequestException('email, password không đúng!');
+    }
+    return comparePassword;
+  }
+
+  updateUserToken = async (refreshToken: string, _id: number) => {
+    const updateToken: UpdateResult = await this.usersRepository.update(
+      { _id },
+      { refreshToken },
+    );
+    return updateToken;
+  };
+
+   findUserByToken = async (refreshToken: string) => {
+    const user = await this.usersRepository.findOne({
+      where: { refreshToken },
+    });
+    if (!user) {
+      throw new BadRequestException('Không tìm thấy user by Token!');
+    }
     return user;
   }
 }

@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { User } from 'src/decorator/customize';
+import { User } from 'src/decoretor/customize';
 import { IUser } from 'src/users/user.interface';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { Role } from './entities/role.entity';
 
 @Controller('roles')
 export class RolesController {
@@ -15,13 +17,21 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Role>> {
+    limit = limit > 100 ? 100 : limit;
+    return this.rolesService.findAll({  
+      page,
+      limit,
+      route: 'http://localhost:8000/api/v1/roles',
+    });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rolesService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.rolesService.findOne(id);
   }
 
   @Patch(':id')

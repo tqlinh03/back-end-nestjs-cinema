@@ -16,14 +16,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { User } from './entities/user.entity';
 import { Pagination } from 'nestjs-typeorm-paginate';
-import { ResponseMessage } from 'src/decorator/customize';
+import { Public, ResponseMessage } from 'src/decoretor/customize';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  
+  @Public()
   @Post()
-  // @ResponseMessage("Create a use")
+  @ResponseMessage("Create a use")
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

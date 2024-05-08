@@ -1,9 +1,12 @@
+import { Booking } from 'src/bookings/entities/booking.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -62,7 +65,13 @@ export class User {
     email: string;
   }
 
-  @OneToMany(() => Role, (role) => role.user)
-  roles: Role[]
+  @ManyToOne(() => Role, role => role.users)
+  role: Role;
+
+  @OneToMany(() => Booking ,(booking) => booking.user)
+  bookings: Booking[]
+
+  @OneToMany(() => Comment ,(comment) => comment.user)
+  comments: Comment[]
 
 }

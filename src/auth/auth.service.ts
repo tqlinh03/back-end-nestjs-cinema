@@ -50,7 +50,7 @@ export class AuthService {
     response.cookie('refresh_token', refresh_token, {
       httpOnly: true,
       maxAge:
-        ms(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE')) * 100,
+        ms(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE')),
     });
 
     return {
@@ -73,9 +73,10 @@ export class AuthService {
 
   processNewToken = async (refreshToken: string, response: Response) => {
     try {
-      this.jwtService.verify(refreshToken, {
+        this.jwtService.verify(refreshToken, {
         secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
       });
+      
       let user = await this.usersService.findUserByToken(refreshToken);
       if (user) {
         const { _id, name, email } = user;
@@ -94,8 +95,7 @@ export class AuthService {
         response.cookie('refresh_token', refresh_token, {
           httpOnly: true,
           maxAge:
-            ms(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE')) *
-            100,
+            ms(this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRE')),
         });
 
         return {
@@ -117,4 +117,10 @@ export class AuthService {
       );
     }
   };
+
+  logout = async (response: Response, user: IUser) =>{
+    await this.usersService.updateUserToken("", user._id)
+    response.clearCookie("refresh_token");
+    return "ok";
+} 
 }

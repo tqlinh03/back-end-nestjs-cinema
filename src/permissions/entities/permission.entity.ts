@@ -15,7 +15,7 @@ export class Permission {
   name: string;
 
   @Column()
-  path: string;
+  apiPath: string;
 
   @Column()
   method: string;
@@ -23,9 +23,6 @@ export class Permission {
   @Column()
   module: string;
   
-  @Column()
-  description: string;
-
   @CreateDateColumn({ nullable: true })
   createdAt: Date;
 

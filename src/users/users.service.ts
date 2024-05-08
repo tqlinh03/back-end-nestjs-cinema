@@ -11,12 +11,15 @@ import {
   Pagination,
   paginate,
 } from 'nestjs-typeorm-paginate';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Role)
+    private rolesRepository: Repository<Role>, 
   ) {}
 
   getHashPassword = (password: string) => {
@@ -31,12 +34,19 @@ export class UsersService {
       where: { email },
     });
 
+    const role = await this.rolesRepository.findOne({
+      where: {
+        name: "NORMAL_USER"
+      }
+    })
+
     if (isExists) {
       throw new BadRequestException('email đã tồn tại!');
     }
     const newUser = await this.usersRepository.create({
       ...createUserDto,
       password: this.getHashPassword(password),
+      role
     });
     await this.usersRepository.save(newUser);
 
@@ -52,7 +62,10 @@ export class UsersService {
         'user.email',
         'user.address',
         'user.gender',
+        'user.createdAt',
+        'user.updatedAt',
       ])
+      .leftJoinAndSelect('user.role', 'role')
       .orderBy('user._id');
 
     return paginate<User>(queryBuilder, options);
@@ -61,6 +74,14 @@ export class UsersService {
   async findOne(_id: number) {
     const user = await this.usersRepository.findOne({
       where: { _id },
+      relations: {
+        role: {
+            permissions: true,
+        },
+        bookings: {
+          movie: true,
+        },
+      },
       select: {
         _id: true,
         name: true,
@@ -78,8 +99,8 @@ export class UsersService {
   async update(_id: number, updateUserDto: UpdateUserDto) {
     const { email } = updateUserDto;
     const user = await this.usersRepository.findOne({ where: { email } });
-    if (user) {
-      throw new BadRequestException(`Email đã tồn tại`);
+    if (!user) {
+      throw new BadRequestException(`Not found email!`);
     }
     return await this.usersRepository.update(_id, updateUserDto);
   }

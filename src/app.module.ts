@@ -4,14 +4,18 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { User } from './users/entities/user.entity';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
-import { Permission } from './permissions/entities/permission.entity';
-import { Role } from './roles/entities/role.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { CinemasModule } from './cinemas/cinemas.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { MoviesModule } from './movies/movies.module';
+import { ShowtimesModule } from './showtimes/showtimes.module';
+import { BookingsModule } from './bookings/bookings.module';
+import { CommentsModule } from './comments/comments.module';
+import { EventsModule } from './gateway/events.module';
 
 @Module({
   imports: [
@@ -27,26 +31,23 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
         username: configService.get<string>('DATABASE_USER'),
         password: configService.get<string>('DATABASE_PASS'),
         database: configService.get<string>('DATABASE_NAME'),
-        // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        entities: [User, Permission, Role],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        // entities: [User, Permission, Role], 
         synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root',
-    //   password: '123456',
-    //   database: 'sso',
-    //   entities: [],
-    //   synchronize: true,
-    // }),
     UsersModule,
     RolesModule,
     PermissionsModule,
     AuthModule,
+    CinemasModule,
+    RoomsModule,
+    MoviesModule,
+    ShowtimesModule,
+    BookingsModule,
+    CommentsModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [

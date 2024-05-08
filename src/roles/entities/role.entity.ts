@@ -8,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -53,11 +54,13 @@ export class Role {
     _id: number;
     email: string;
   };
-  @ManyToOne(() => User, (user) => user.roles)
-  user: User;
 
-  @ManyToMany(() => Permission)
+  @OneToMany(() => User, user => user.role) // Mối quan hệ 1-N với UserEntity
+  users: User[];
+
+  @ManyToMany(() => Permission, {
+    cascade: true,
+})
   @JoinTable()
   permissions: Permission[];
-  // permissions: 	foreign key (n: n)
 }

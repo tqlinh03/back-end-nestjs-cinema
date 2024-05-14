@@ -53,24 +53,6 @@ export class Movie {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @Column({ type: 'json', nullable: true })
-  createdBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  updatedBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  deleteBy: {
-    _id: number;
-    email: string;
-  };
-
   @OneToMany(() => Showtime, (showtime) => showtime.movie)
   showtimes: Showtime[]
 

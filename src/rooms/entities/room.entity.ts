@@ -30,23 +30,6 @@ export class Room {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @Column({ type: 'json', nullable: true })
-  createdBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  updatedBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  deleteBy: {
-    _id: number;
-    email: string;
-  };
 
   @ManyToOne(() => Cinema, (cinema) => cinema.rooms)
   cinema: Cinema

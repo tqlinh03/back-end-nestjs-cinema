@@ -91,9 +91,6 @@ export class CommentsService {
         relations: ['user']
       })),
     );
-
-    console.log(comments.length)
-
     return comments;
   }
 }

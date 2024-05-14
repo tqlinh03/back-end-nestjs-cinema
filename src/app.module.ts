@@ -25,7 +25,7 @@ import { EventsModule } from './gateway/events.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
+        type: 'mssql',
         host: configService.get<string>('DATABASE_HOST'),
         port: parseInt(configService.get<string>('DATABASE_PORT')),
         username: configService.get<string>('DATABASE_USER'),

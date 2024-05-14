@@ -58,7 +58,6 @@ export class ShowtimesService {
     const endOfDay = new Date(date);
     endOfDay.setHours(23,59,59,999);
 
-console.log("id", id)
     return this.showtimesRepository.find({
       where:{
         date: Between(startOfDay, endOfDay),

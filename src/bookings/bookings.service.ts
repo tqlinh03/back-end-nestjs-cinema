@@ -43,7 +43,6 @@ export class BookingsService {
     if (ticket) {
       ticket.isPayment = true;
       const ok = await this.bookingsRepository.save(ticket);
-      console.log(ok);
       return await this.bookingsRepository.save(ok);
     }
     return new BadRequestException(`Ticket not found`);

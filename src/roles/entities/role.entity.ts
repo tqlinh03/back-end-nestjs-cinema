@@ -37,24 +37,6 @@ export class Role {
   @DeleteDateColumn({ nullable: true })
   deletedAt: Date;
 
-  @Column({ type: 'json', nullable: true })
-  createdBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  updatedBy: {
-    _id: number;
-    email: string;
-  };
-
-  @Column({ type: 'json', nullable: true })
-  deleteBy: {
-    _id: number;
-    email: string;
-  };
-
   @OneToMany(() => User, user => user.role) // Mối quan hệ 1-N với UserEntity
   users: User[];
 

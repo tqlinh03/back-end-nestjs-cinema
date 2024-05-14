@@ -50,7 +50,6 @@ export class AuthController {
   @ResponseMessage("Get a account")
   @Get("/account")
   handleFetchAccount(@User() user: IUser){
-    console.log("account: ", user)
     return this.userService.findOne(user._id)
   }
 
